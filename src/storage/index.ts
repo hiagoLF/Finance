@@ -1,8 +1,16 @@
 import methods from './methods';
 
+type GetMonthDataProps = {
+  month: string;
+  year: string;
+};
+
 export default {
   createNewSession: async (name: string) => {
-    const cessions = await methods.getSessions();
-    console.log('Cessions >>> ', {name, cessions});
+    const newSession = await methods.createSession(name);
+    return newSession;
+  },
+  getMonthData: async ({month, year}: GetMonthDataProps) => {
+    console.log('get Month', month, year);
   },
 };

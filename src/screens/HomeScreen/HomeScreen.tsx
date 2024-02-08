@@ -11,15 +11,26 @@ export const HomeScreen = () => {
   const [selectingMonth, setSelectingMonth] = useState(false);
   const [creatingSession, setCreatingSession] = useState(false);
   const [creatingNewItem, setCreatingNewItem] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState({
+    month: 'jan',
+    year: '2024',
+  });
+
+  const getMonthData = async () => {
+    const monthData = await storage.getMonthData(selectedMonth);
+    console.log('New Month Data >>> ', monthData);
+  };
 
   const handlePickMonth = (year: string, month: string) => {
-    console.log('Picked >> ', year, ' - ', month);
-
+    setSelectedMonth({month, year});
     setSelectingMonth(false);
   };
 
   const handleCreateNewSession = async (name: string) => {
-    await storage.createNewSession(name);
+    const created = await storage.createNewSession(name);
+    if (created) {
+      getMonthData();
+    }
   };
 
   const handleCreateNewItem = (
