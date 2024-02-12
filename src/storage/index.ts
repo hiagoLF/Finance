@@ -1,8 +1,24 @@
-import methods from './methods';
+import methods, {Cession} from './methods';
 
-type GetMonthDataProps = {
+export type GetMonthDataProps = {
   month: string;
   year: string;
+};
+
+export type MonthResult = {
+  month: string;
+  year: string;
+  deposit: number;
+  outflow: number;
+  accumulated: number;
+  cessions: Cession[];
+};
+
+export type MonthItemToCreate = {
+  name: string;
+  cost: number;
+  installmentsAmount: number;
+  cessionId: string;
 };
 
 export default {
@@ -11,6 +27,16 @@ export default {
     return newSession;
   },
   getMonthData: async ({month, year}: GetMonthDataProps) => {
-    console.log('get Month', month, year);
+    const cessions = await methods.getSessions();
+
+    return {
+      month: 'jan',
+      year: '2024',
+      deposit: 250000,
+      outflow: 376000,
+      accumulated: 95000,
+      cessions: cessions.cessions,
+    };
   },
+  createNewItem: async (itemToCreate: MonthItemToCreate) => {},
 };

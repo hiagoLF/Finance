@@ -4,7 +4,7 @@ export const STORAGE_KEYS = {
   SESSIONS: '@Fiance-Sessions',
 };
 
-type Cession = {
+export type Cession = {
   id: string;
   name: string;
 };
