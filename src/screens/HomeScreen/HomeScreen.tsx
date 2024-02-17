@@ -41,6 +41,7 @@ export const HomeScreen = () => {
     const created = await storage.createNewSession(name);
     if (created) {
       getSelectedMonthData();
+      setCreatingSession(false);
     }
   };
 
@@ -54,7 +55,9 @@ export const HomeScreen = () => {
       cost,
       installmentsAmount,
       cessionId: creatingNewItem.cession,
+      firstMonth: selectedMonth,
     });
+    setCreatingNewItem({cession: '', creating: false});
   };
 
   useEffect(() => {
@@ -81,9 +84,7 @@ export const HomeScreen = () => {
       accumulated: convertToBrlMoney(monthData?.accumulated.toString() || ''),
       cessions: monthData?.cessions,
     };
-  }, [monthData?.year, monthData?.month]);
-
-  console.log('formatedData >>> ', formatedData);
+  }, [monthData?.year, monthData?.month, monthData?.cessions.length]);
 
   return (
     <SafeAreaView>
@@ -153,9 +154,10 @@ export const HomeScreen = () => {
           </Card>
 
           {/* List */}
-          {formatedData.cessions?.map(cession => (
-            <List.Section title="Lista de ítens" key={cession.id}>
+          <List.Section title="Lista de ítens">
+            {formatedData.cessions?.map(cession => (
               <List.Accordion
+                key={cession.id}
                 title={cession.name}
                 left={props => <List.Icon {...props} icon="folder" />}>
                 <List.Item title="First item" />
@@ -173,8 +175,8 @@ export const HomeScreen = () => {
                   }
                 />
               </List.Accordion>
-            </List.Section>
-          ))}
+            ))}
+          </List.Section>
         </View>
       </ScrollView>
       <FAB
