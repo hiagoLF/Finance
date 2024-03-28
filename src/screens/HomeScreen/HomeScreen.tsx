@@ -23,8 +23,8 @@ export const HomeScreen = () => {
   const [monthData, setMonthData] = useState<MonthResult | undefined>();
 
   const getSelectedMonthData = async () => {
-    const monthResult = await storage.getMonthData(selectedMonth);
-    setMonthData(monthResult);
+    // const monthResult = await storage.getMonthData(selectedMonth);
+    // setMonthData(monthResult);
   };
 
   const getMonth = async ({month, year}: GetMonthDataProps) => {

@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {orderByMonth} from '../utils/month';
 
 export const STORAGE_KEYS = {
   SESSIONS: '@Fiance-Sessions',
@@ -25,8 +26,14 @@ export interface MonthItem {
   cessionId: string;
 }
 
-interface AllMonthsItems {
-  [k: string]: MonthItem[];
+export interface Item {
+  name: string;
+  cost: number;
+  cessionId: string;
+  month: {
+    month: string;
+    year: number;
+  };
 }
 
 export default {
@@ -45,7 +52,9 @@ export default {
   createSession: async (name: string) => {
     try {
       const result = await AsyncStorage.getItem(STORAGE_KEYS.SESSIONS);
-      const cessions = JSON.parse(result as string) as Cessions;
+      const cessions: Cessions = result
+        ? JSON.parse(result)
+        : cessionsInitialStructure;
       const newSession = {id: Math.random().toString(), name};
       cessions.cessions.push(newSession);
       await AsyncStorage.setItem(
@@ -57,13 +66,20 @@ export default {
       return;
     }
   },
-  getAllMonthsItems: async (): Promise<AllMonthsItems | undefined> => {
+  createItems: async (items: Item[]) => {
     try {
       const result = await AsyncStorage.getItem(STORAGE_KEYS.MONTHS_ITEMS);
-      if (!result) {
-        await AsyncStorage.setItem(STORAGE_KEYS.MONTHS_ITEMS, '{}');
-        return {};
-      }
+      const parsedItems: Item[] = result ? JSON.parse(result) : [];
+
+      parsedItems.push(...items);
+
+      const orderedItems = orderByMonth(parsedItems);
+
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.MONTHS_ITEMS,
+        JSON.stringify(orderedItems),
+      );
+      return orderedItems;
     } catch (err) {
       return;
     }
